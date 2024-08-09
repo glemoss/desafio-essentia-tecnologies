@@ -26,6 +26,8 @@ export class KnexTodosRepository implements TodosRepository {
   }
 
   async update(id: string, propertiesToUpdate: Partial<Todo>) {
+    const todo = await this.findById(id)
+
     await knex<Todo>('todos')
       .where('id', id)
       .update({
@@ -35,7 +37,7 @@ export class KnexTodosRepository implements TodosRepository {
 
     const updatedTodo = await knex<Todo>('todos').where('id', id).first()
 
-    return updatedTodo
+    return todo ? updatedTodo : todo
   }
 
   async delete(id: string) {
