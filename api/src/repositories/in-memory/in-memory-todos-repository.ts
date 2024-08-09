@@ -1,17 +1,10 @@
+import { Todo } from '@/models/todo'
 import { randomUUID } from 'node:crypto'
 
-interface Todo {
-  id: string
-  title: string
-  completed: boolean
-  created_at: Date
-  updated_at: Date
-}
-
-export class InMemoryTodoRepository {
+export class InMemoryTodosRepository {
   private todos: Todo[] = []
 
-  async create(title: string): Promise<Todo> {
+  async create(title: string) {
     const todo: Todo = {
       id: randomUUID(),
       title,
@@ -24,31 +17,34 @@ export class InMemoryTodoRepository {
     return todo
   }
 
-  async findById(id: string): Promise<Todo | undefined> {
-    return this.todos.find((todo) => todo.id === id)
-  }
+  async findById(id: string) {
+    const todo = this.todos.find((todo) => todo.id === id)
 
-  async findAll(): Promise<Todo[]> {
-    return this.todos
-  }
-
-  async update(
-    id: string,
-    title: string,
-    completed: boolean,
-  ): Promise<Todo | undefined> {
-    const todo = await this.findById(id)
-
-    if (todo) {
-      todo.title = title
-      todo.completed = completed
-      todo.updated_at = new Date()
+    if (!todo) {
+      return null
     }
 
     return todo
   }
 
-  async delete(id: string): Promise<void> {
+  async findAll() {
+    return this.todos
+  }
+
+  async update(id: string, propertiesToUpdate: Partial<Todo>) {
+    let todo = await this.findById(id)
+
+    todo = {
+      ...todo,
+      ...propertiesToUpdate,
+      updated_at: new Date(),
+      title: todo!.title,
+    }
+
+    return todo
+  }
+
+  async delete(id: string) {
     this.todos = this.todos.filter((todo) => todo.id !== id)
   }
 }
