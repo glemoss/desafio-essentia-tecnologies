@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { makeCreateTodoUseCase } from '@/use-cases/factories/make-todo-use-case'
+import { makeFetchAllTodosUseCase } from '@/use-cases/factories/make-fetch-all-todos-use-case'
 
 export async function createTodo(request: FastifyRequest, reply: FastifyReply) {
   const createTodoBodySchema = z.object({
@@ -23,4 +24,22 @@ export async function createTodo(request: FastifyRequest, reply: FastifyReply) {
   }
 
   return reply.status(201).send()
+}
+
+export async function fetchAllTodos(
+  request: FastifyRequest,
+  reply: FastifyReply,
+) {
+  try {
+    const fetchAllTodosUseCase = makeFetchAllTodosUseCase()
+
+    const { todos } = await fetchAllTodosUseCase.execute()
+
+    return reply.send(todos)
+  } catch (err) {
+    if (err) {
+      return reply.status(500).send({ message: err })
+    }
+    throw err
+  }
 }

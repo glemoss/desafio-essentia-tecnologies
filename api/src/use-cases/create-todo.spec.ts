@@ -5,13 +5,13 @@ import { InMemoryTodosRepository } from '@/repositories/in-memory/in-memory-todo
 let todosRepository: InMemoryTodosRepository
 let sut: CreateTodoUseCase
 
-describe('Create todo use case', () => {
+describe('Create to-do use case', () => {
   beforeEach(() => {
     todosRepository = new InMemoryTodosRepository()
     sut = new CreateTodoUseCase(todosRepository)
   })
 
-  it('should create a new todo', async () => {
+  it('should be able to create a new todo', async () => {
     const { todo } = await sut.execute({
       title: 'Test Todo',
     })
