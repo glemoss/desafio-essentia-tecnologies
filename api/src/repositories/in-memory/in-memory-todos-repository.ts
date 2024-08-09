@@ -31,14 +31,17 @@ export class InMemoryTodosRepository {
     return this.todos
   }
 
-  async update(id: string, propertiesToUpdate: Partial<Todo>) {
+  async update(id: string, propertiesToUpdate: Partial<Todo>): Promise<Todo> {
     let todo = await this.findById(id)
+
+    if (!todo) {
+      throw new Error('Todo not found')
+    }
 
     todo = {
       ...todo,
       ...propertiesToUpdate,
       updated_at: new Date(),
-      title: todo!.title,
     }
 
     return todo

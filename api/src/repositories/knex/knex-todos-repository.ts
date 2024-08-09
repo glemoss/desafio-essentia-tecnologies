@@ -25,14 +25,15 @@ export class KnexTodosRepository implements TodosRepository {
     return knex('todos').select('*')
   }
 
-  async update(id: string, todo: Partial<Todo>): Promise<Todo> {
-    const [updatedTodo] = await knex<Todo>('todos')
+  async update(id: string, propertiesToUpdate: Partial<Todo>) {
+    await knex<Todo>('todos')
       .where('id', id)
       .update({
-        ...todo,
+        ...propertiesToUpdate,
         updated_at: new Date(),
       })
-      .returning('*')
+
+    const updatedTodo = await knex<Todo>('todos').where('id', id).first()
 
     return updatedTodo
   }
