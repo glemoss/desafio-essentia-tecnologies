@@ -1,5 +1,5 @@
 export interface Todo {
-  id?: string
+  id: string
   title: string
   completed?: boolean
   created_at?: Date
