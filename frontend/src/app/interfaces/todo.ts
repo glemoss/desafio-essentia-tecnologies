@@ -1,7 +1,7 @@
 export interface Todo {
     id: string;
     title: string;
-    isCompleted: boolean;
+    completed: boolean;
     createdAt: string | Date;
     updatedAt?: string | Date;
 }
@@ -12,5 +12,5 @@ export interface CreateTodo {
 
 export interface UpdateTodo {
     title?: string;
-    isCompleted?: boolean;
+    completed?: boolean;
 }

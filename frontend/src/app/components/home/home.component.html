@@ -1,0 +1,31 @@
+<div class="todo-container">
+  <form [formGroup]="createTodoForm" (ngSubmit)="createTodo()">
+    <input formControlName="title" placeholder="New Todo" />
+    <button type="submit">Add Todo</button>
+  </form>
+
+  <ul>
+    <li *ngFor="let todo of todoItems">
+      <span>{{ todo.title }}</span>
+      <input
+        type="checkbox"
+        [checked]="todo.completed"
+        (change)="toggleTodoCompletion(todo)"
+      />
+      <button (click)="selectTodoForEditing(todo)">Edit</button>
+      <button (click)="deleteTodoById(todo.id)">Delete</button>
+    </li>
+  </ul>
+
+  <div *ngIf="selectedTodo">
+    <form [formGroup]="editTodoForm" (ngSubmit)="updateTodo()">
+      <input formControlName="title" placeholder="Edit Todo" />
+      <label>
+        <input type="checkbox" formControlName="completed" />
+        Completed
+      </label>
+      <button type="submit">Save</button>
+      <button type="button" (click)="cancelEditing()">Cancel</button>
+    </form>
+  </div>
+</div>

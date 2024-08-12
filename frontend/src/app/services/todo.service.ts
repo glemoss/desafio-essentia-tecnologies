@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
-import { environment } from '../../environment/environment';
-import { ValidationError } from '../errors/validation-error';
-import { CreateTodo, Todo, UpdateTodo } from '../interfaces/todo';
+import { Injectable } from '@angular/core'
+import { ValidationError } from '../errors/validation-error'
+import { CreateTodo, Todo, UpdateTodo } from '../interfaces/todo'
 
 
-const apiUrl = environment.apiUrl;
+const apiUrl = 'http://localhost:3333'
 
 @Injectable({
   providedIn: 'root',
@@ -18,45 +17,28 @@ export class TodoService {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(todo),
-      });
-      const { data, message, details } = (await response.json()) as any;
-      if (!response.ok) {
-        return {
-          error: message ?? 'Error creating todo',
-          details: details as ValidationError[],
-        };
-      }
+      })
+      const data = await response.json()
       return {
-        message: message as string,
         data: data as Todo,
-      };
+      }
     } catch (error) {
-      console.error(error);
-      return {
-        error: 'Error creating todo',
-      };
+      console.error(error)
+      return
     }
   }
 
   async getTodos() {
     try {
-      const response = await fetch(`${apiUrl}/todos/`);
-      const json = (await response.json()) as any;
-      const { data, message } = json;
-      if (!response.ok) {
-        return {
-          error: message as string,
-        };
+      const response = await fetch(`${apiUrl}/todos`)
+      const json = await response.json()
+
+      return {
+        data: json as Todo[],
       }
-      return {
-        message: message as string,
-        data: data as Todo[],
-      };
     } catch (error) {
-      console.error(error);
-      return {
-        error: 'Error getting todos',
-      };
+      console.error(error)
+      return
     }
   }
 
@@ -68,24 +50,22 @@ export class TodoService {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(todo),
-      });
-      const json = (await response.json()) as any;
-      const { data, message, details } = json;
+      })
+      const json = (await response.json()) as any
+      const { data, message, details } = json
       if (!response.ok) {
         return {
           error: message as string,
           details: details as ValidationError[],
-        };
+        }
       }
       return {
         message: message as string,
         data: data as Todo,
-      };
+      }
     } catch (error) {
-      console.error(error);
-      return {
-        error: 'Error updating todo',
-      };
+      console.error(error)
+      return
     }
   }
 
@@ -93,21 +73,12 @@ export class TodoService {
     try {
       const response = await fetch(`${apiUrl}/todos/${id}`, {
         method: 'DELETE',
-      });
-      const { message } = (await response.json()) as any;
-      if (!response.ok) {
-        return {
-          error: message as string,
-        };
-      }
-      return {
-        message: message as string,
-      };
+      })
+      
+      return 'Todo deleted'
     } catch (error) {
-      console.error(error);
-      return {
-        error: 'Error deleting todo',
-      };
+      console.error(error)
+      return
     }
   }
 }
